@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "three": "^0.127.0"
+  },
+  "name": "assignment2",
+  "version": "1.0.0",
+  "main": "index.html",
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run lite",
+    "lite": "lite-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
