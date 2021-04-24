@@ -12,10 +12,10 @@ async function createObstacle(x, y, z) {
     loader.loadAsync('../../../missile.glb'),
   ]);
 
-  console.log('Squaaawk!', starData);
 
   const star = setupModel(starData);
   
+  star.visible = true;
   
   star.scale.set(0.05,0.05,0.05)
   // star.rotation.set(0, MathUtils.degToRad(90),MathUtils.degToRad(90));
@@ -24,7 +24,6 @@ async function createObstacle(x, y, z) {
   star.tick = (delta) => {
     star.position.x += 0.01;
   }
-  console.log(star);
   return star;
 }
 
