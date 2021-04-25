@@ -2,9 +2,10 @@ import { createCamera } from './components/camera.js';
 import { createCube } from './components/cube.js';
 import { createScene } from './components/scene.js';
 import { createLights } from './components/lights.js';
-import { createObstacle } from './components/obstacle.js';
+import { createMissile } from './components/missile.js';
 import { loadPlane } from './components/plane.js';
 import { loadEnemy } from './components/enemy.js';
+import {createStar} from './components/star.js';
 
 import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
@@ -76,13 +77,19 @@ class World
 
     async make_bullet(x,y,z)
     {
-        const temp = await createObstacle(x,y,z);
+        const temp = await createMissile(x,y,z);
         return temp;
     }
 
     async make_enemy()
     {
         const temp = await loadEnemy(3.5, Math.random()*3-1.5, 0, -0.01,0);
+        return temp;
+    }
+
+    async make_star()
+    {
+        const temp = await createStar(3.5, Math.random()*3-1.5, 0, -0.01,0);
         return temp;
     }
 

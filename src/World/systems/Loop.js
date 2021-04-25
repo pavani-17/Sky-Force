@@ -14,6 +14,8 @@ class Loop
         this.tick_var = 0;
         this.enemy = [];
         this.missiles = [];
+        this.stars = [];
+        this.score = 0;
     }
 
     start()
@@ -58,7 +60,16 @@ class Loop
                 this.scene.add(temp)
                 this.updatables.push(temp);
                 this.enemy.push(temp);
-            })
+            });
+        }
+        if(this.tick_var % 50 == 0)
+        {
+            this.world.make_star().then((temp) => {
+                console.log("Making star");
+                this.scene.add(temp)
+                this.updatables.push(temp);
+                this.stars.push(temp);
+            });
         }
         var planeBox = new Box3().setFromObject(this.plane);
         for (const object of this.enemy)
@@ -79,6 +90,16 @@ class Loop
                 }
             }
         }
+        for (const star of this.stars)
+        {
+            var starBox = new Box3().setFromObject(star);
+            if(starBox.intersectsBox(planeBox))
+            {
+                this.score++;
+                console.log(this.score);
+                star.visible = false;
+            }
+        }
         this.enemy = this.enemy.filter((enemy) => {
             if(enemy.visible)
             {
@@ -88,9 +109,20 @@ class Loop
             {
                 return false;
             }
-        })
+        });
         this.missiles = this.missiles.filter((missile) => {
             if(missile.visible)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        });
+
+        this.stars = this.stars.filter((star) => {
+            if(star.visible)
             {
                 return true;
             }
