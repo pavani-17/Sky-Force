@@ -1,5 +1,4 @@
 import { createCamera } from './components/camera.js';
-import { createCube } from './components/cube.js';
 import { createScene } from './components/scene.js';
 import { createLights } from './components/lights.js';
 import { createMissile } from './components/missile.js';
@@ -28,10 +27,10 @@ class World
 
         
         loop = new Loop(camera, scene, renderer, this);
+        this.dynamic_enemies = [];
 
         container.append(renderer.domElement);
 
-        const cube = createCube();
         const { ambientLight, mainLight } = createLights();
 
         scene.add(ambientLight, mainLight);
@@ -51,23 +50,50 @@ class World
         {
             if(e.code == "ArrowRight")
             {
-                plane.position.x += 0.1;
+                if(plane.position.x < 3)
+                {
+                    plane.position.x += 0.1;
+                }
             }
             else if(e.code == "ArrowLeft")
             {
-                plane.position.x -= 0.1;
+                if(plane.position.x > -3)
+                {
+                    plane.position.x -= 0.1;
+                }
             }
             else if(e.code == "ArrowUp")
             {
-                plane.position.y += 0.1;
+                if(plane.position.y < 1.4)
+                {
+                    plane.position.y += 0.1;
+                }
+                for (const enemy of this.dynamic_enemies)
+                {
+                    if(enemy.position.y < 1.4)
+                    {
+                        enemy.position.y += 0.1;
+                    }
+                }
             }
             else if(e.code == "ArrowDown")
             {
-                plane.position.y -= 0.1;
+                if(plane.position.y > -1.4)
+                {
+                    plane.position.y -= 0.1;
+                }
+
+                for (const enemy of this.dynamic_enemies)
+                {
+                    if(enemy.position.y > -1.4)
+                    {
+                        enemy.position.y -= 0.1;
+                    }
+                }
             }
             else if(e.code == "Space")
             {
-                const temp = await this.make_bullet(plane.position.x, plane.position.y,plane.position.z)
+                const temp = await this.make_bullet(plane.position.x, plane.position.y,plane.position.z,3)
                 scene.add(temp);
                 loop.missiles.push(temp);
                 loop.updatables.push(temp)
@@ -75,16 +101,43 @@ class World
         });
     }
 
-    async make_bullet(x,y,z)
+    async make_bullet(x,y,z,direction)
     {
-        const temp = await createMissile(x,y,z);
+        const temp = await createMissile(x,y,z,direction);
         return temp;
     }
 
     async make_enemy()
     {
-        const temp = await loadEnemy(3.5, Math.random()*3-1.5, 0, -0.01,0);
-        return temp;
+        if(Math.random() < 0.5)
+        {
+            const temp = await loadEnemy(3.5, Math.random()*3-1.5, 0, -0.01,0,"static");
+            return temp
+        }
+        else
+        {
+            if(Math.random() < 0.6)
+            {
+                const temp = await loadEnemy(3.5, loop.plane.position.y, 0, -0.015,0,"dynamic");
+                this.dynamic_enemies.push(temp);
+                return temp;
+            }
+            else
+            {
+                if(Math.random() < 0.5)
+                {
+                    const temp = await loadEnemy(3.5, Math.random()*3-1.5, 0, -0.02,-0.005,"move");
+                    console.log("Made one");
+                    return temp;
+                }
+                else
+                {
+                    const temp = await loadEnemy(3.5, Math.random()*3-1.5, 0, -0.02,+0.005,"move");
+                    return temp;
+                }
+            }
+            
+        }
     }
 
     async make_star()

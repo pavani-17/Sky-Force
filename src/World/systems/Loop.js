@@ -16,6 +16,8 @@ class Loop
         this.missiles = [];
         this.stars = [];
         this.score = 0;
+        this.health = 100;
+        this.enemy_missiles = [];
     }
 
     start()
@@ -47,6 +49,7 @@ class Loop
             if(object.position.x < -3.5 || object.position.x > 3.5 || object.visible == false)
             {
                 this.scene.remove(object);
+                object.visible = false;
                 return false;
             }
             else
@@ -54,6 +57,13 @@ class Loop
                 return true;
             }
         })
+        for (const object of this.enemy)
+        {
+            if(object.position.y > 1.5 || object.position.y < -1.5)
+            {
+                object.speed_y = -object.speed_y;
+            }
+        }
         if(this.tick_var%100 == 0)
         {
             this.world.make_enemy().then((temp) => {
@@ -62,6 +72,7 @@ class Loop
                 this.enemy.push(temp);
             });
         }
+    
         if(this.tick_var % 50 == 0)
         {
             this.world.make_star().then((temp) => {
@@ -77,7 +88,8 @@ class Loop
             var enemyBox = new Box3().setFromObject(object);
             if(enemyBox.intersectsBox(planeBox))
             {
-                this.stop();
+                this.health -= 30;
+                object.visible= false;
             }
             for (const obj1 of this.missiles)
             {
@@ -86,6 +98,7 @@ class Loop
                 {
                     object.visible = false;
                     obj1.visible = false;
+                    this.score += 5;
                     break;
                 }
             }
@@ -95,9 +108,36 @@ class Loop
             var starBox = new Box3().setFromObject(star);
             if(starBox.intersectsBox(planeBox))
             {
-                this.score++;
+                this.score+=10;
                 console.log(this.score);
                 star.visible = false;
+            }
+        }
+
+        for (const missile of this.enemy_missiles)
+
+        {
+            var missileBox = new Box3().setFromObject(missile);
+            if(planeBox.intersectsBox(missileBox) && missile.visible)
+            {
+                missile.visible = false;
+                this.health -= 10;
+            }
+
+        }
+        if(this.tick_var % 500 == 0)
+        {
+            for (const enemy of this.enemy)
+            {
+                if(Math.random() < 0.5 || enemy.state == "Dynamic")
+                {
+                    this.world.make_bullet(enemy.position.x, enemy.position.y, enemy.position.z, -2).then((temp) => {
+                        console.log(temp);
+                        this.scene.add(temp);
+                        this.updatables.push(temp);
+                        this.enemy_missiles.push(temp);
+                    })
+                }
             }
         }
         this.enemy = this.enemy.filter((enemy) => {
@@ -131,7 +171,26 @@ class Loop
                 return false;
             }
         })
-        
+
+        this.enemy_missiles = this.enemy_missiles.filter((missile) => {
+            if(missile.visible)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        });
+
+        if(this.health <= 0)
+        {
+            this.stop();
+        }
+
+        document.getElementById("score").innerHTML = "Score : " + this.score;
+        document.getElementById("health").innerHTML = "Health : " + this.health;
+
     }
 }
 

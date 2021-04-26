@@ -4,7 +4,7 @@ import { setupModel } from './setupModel.js';
 import { MathUtils } from '../../../node_modules/three/src/Three.js';
 
 
-async function loadEnemy(x,y,z,speed_x,speed_y) {
+async function loadEnemy(x,y,z,speed_x,speed_y,type) {
     const loader = new GLTFLoader();
   
     const [enemyData] = await Promise.all([
@@ -19,9 +19,13 @@ async function loadEnemy(x,y,z,speed_x,speed_y) {
 
     enemy.visible = true;
 
+    enemy.type = type;
+    enemy.speed_x = speed_x;
+    enemy.speed_y = speed_y;
+
     enemy.tick = (delta) => {
-        enemy.position.x += speed_x;
-        enemy.position.y += speed_y;
+        enemy.position.x += enemy.speed_x;
+        enemy.position.y += enemy.speed_y;
     }
   
     return enemy;

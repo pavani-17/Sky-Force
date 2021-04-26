@@ -5,7 +5,7 @@ import { setupModel } from './setupModel.js';
 
 const radiansPerSecond = MathUtils.degToRad(30);
 
-async function createMissile(x, y, z) {
+async function createMissile(x, y, z, direction) {
   const loader = new GLTFLoader();
 
   const [starData] = await Promise.all([
@@ -17,12 +17,19 @@ async function createMissile(x, y, z) {
   
   missile.visible = true;
   
+  missile.rotation.x = MathUtils.degToRad(90)
+
   missile.scale.set(0.05,0.05,0.05)
   // star.rotation.set(0, MathUtils.degToRad(90),MathUtils.degToRad(90));
   missile.position.set(x,y,z);
 
+  if(direction < 0)
+  {
+    missile.rotation.y = MathUtils.degToRad(-180)
+  }
+
   missile.tick = (delta) => {
-    missile.position.x += 0.01;
+    missile.position.x += 0.01*direction;
   }
   return missile;
 }
