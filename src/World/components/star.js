@@ -22,7 +22,7 @@ async function createStar(x, y, z) {
   star.position.set(x,y,z);
 
   star.tick = (delta) => {
-    star.position.x -= 0.01;
+    star.position.x -= 0.015;
     star.rotation.x += MathUtils.degToRad(1);
     star.rotation.y += MathUtils.degToRad(1);
     star.rotation.z += MathUtils.degToRad(1);

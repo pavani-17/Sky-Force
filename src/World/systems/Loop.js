@@ -77,7 +77,6 @@ class Loop
         if(this.tick_var % 50 == 0)
         {
             this.world.make_star().then((temp) => {
-                console.log("Making star");
                 this.scene.add(temp)
                 this.updatables.push(temp);
                 this.stars.push(temp);
@@ -110,7 +109,6 @@ class Loop
             if(starBox.intersectsBox(planeBox))
             {
                 this.score+=10;
-                console.log(this.score);
                 star.visible = false;
             }
         }
@@ -133,7 +131,6 @@ class Loop
                 if(Math.random() < 0.5 || enemy.state == "Dynamic")
                 {
                     this.world.make_bullet(enemy.position.x, enemy.position.y, enemy.position.z, -2).then((temp) => {
-                        console.log(temp);
                         this.scene.add(temp);
                         this.updatables.push(temp);
                         this.enemy_missiles.push(temp);

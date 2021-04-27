@@ -127,7 +127,6 @@ class World
                 if(Math.random() < 0.5)
                 {
                     const temp = await loadEnemy(3.5, Math.random()*3-1.5, 0, -0.02,-0.005,"move");
-                    console.log("Made one");
                     return temp;
                 }
                 else
