@@ -34,6 +34,7 @@ class Loop
     stop()
     {
         this.renderer.setAnimationLoop(null);
+        document.getElementById("health").innerHTML = "Game Over "
     }
 
     tick()
@@ -186,6 +187,8 @@ class Loop
         if(this.health <= 0)
         {
             this.stop();
+            this.health = 0;
+            return;
         }
 
         document.getElementById("score").innerHTML = "Score : " + this.score;

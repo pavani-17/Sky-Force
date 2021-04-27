@@ -6,9 +6,14 @@ import { MathUtils } from '../../../node_modules/three/src/Three.js';
 
 async function loadEnemy(x,y,z,speed_x,speed_y,type) {
     const loader = new GLTFLoader();
-  
+
+    var file_name = "../../../Enemy_Blue.glb";
+    if(Math.random() < 0.5)
+    {
+      file_name = "../../../Enemy.glb"
+    }
     const [enemyData] = await Promise.all([
-      loader.loadAsync('../../../Enemy.glb'),
+        loader.loadAsync(file_name),
     ]);
   
     const enemy = setupModel(enemyData);
